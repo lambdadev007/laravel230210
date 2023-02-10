@@ -36,6 +36,30 @@
                     </tr>
                     <tr>
                         <th>
+                            Samples
+                        </th>
+                        <td>
+                            {{ $client->samples }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            PriceL
+                        </th>
+                        <td>
+                            {{ $client->pricel }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Units/day
+                        </th>
+                        <td>
+                            {{ $client->importance }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             Contact
                         </th>
                         <td>

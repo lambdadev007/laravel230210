@@ -35,15 +35,20 @@ class ClientController extends Controller
 
     public function store(StoreClientRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'tel' => 'required|unique:clients|max:255',
-            'mobile' => 'required|unique:clients|max:255',
-        ]);
+        if($request->tel != '' || $request->mobile != '') {
+            if($request->tel != '') $value = ['tel' => 'unique:clients|max:255'];
+            if($request->mobile != '') $value = ['mobile' => 'unique:clients|max:255'];
+            if($request->tel != '' && $request->mobile != '') $value = [
+                'tel' => 'unique:clients|max:255',
+                'mobile' => 'unique:clients|max:255',
+            ];
+            $validator = Validator::make($request->all(), $value);
 
-        if ($validator->fails()) {
-            return redirect()->route('admin.clients.create')
-                        ->withErrors($validator)
-                        ->withInput();
+            if ($validator->fails()) {
+                return redirect()->route('admin.clients.create')
+                            ->withErrors($validator)
+                            ->withInput();
+            }
         }
 
         $client = Client::create($request->all());

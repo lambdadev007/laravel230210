@@ -3,29 +3,40 @@
     <link href="{{ asset('css/config.css') }}" rel="stylesheet" />
 @endsection
 @section('content')
-@can('client_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route("admin.clients.create") }}">
-                Add Contact
-            </a>
-        </div>
-    </div>
-@endcan
-<div class="card">
+
+<div class="card" style="zoom: 0.75;">
     <div class="card-header">
         Contact List
+        <form method="get" action="{{ route("admin.clients.create") }}" id="form_submit">
+        </form>
     </div>
 
-    
 
+    <!-- @can('client_create')
+        <div style="float:right; margin-bottom: 10px;" class="row">
+            <div class="col-lg-12">
+            </div> 
+        </div>
+    @endcan -->
     <div class="card-body">
+
         <div class="table-responsive">
+
+            <div id="printbar" style="float:right"></div>
             <table class=" table table-bordered table-striped table-hover datatable datatable-Client" id="table_client">
+
+                    <!-- <div style="float:left; margin-bottom: 10px;" class="row"> -->
+                        <!-- <div class="col-lg-12"> -->
+                            <!-- <a class="btn btn-success" style="float:left;margin-right:20px;" href="{{ route("admin.clients.create") }}">
+                                Add Contact
+                            </a> -->
+                        <!-- </div> -->
+                    <!-- </div> -->
+
                 <thead id="table_client_thead">
                     <tr>
-                        <th >
-
+                        <th>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </th>
                         <th >
                             ID
@@ -35,6 +46,15 @@
                         </th>
                         <th>
                             Status
+                        </th>
+                        <th>
+                            Smp
+                        </th>
+                        <th>
+                            PL€
+                        </th>
+                        <th>
+                            Pcs
                         </th>
                         <th>
                             Contact
@@ -66,25 +86,53 @@
                         <th>
                             Comments
                         </th>
-                        <th>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </th>
+
                     </tr>
                 </thead>
-                <tbody>
+                <tbody style="text-align:center">
                     @foreach($clients as $key => $client)
                         <tr data-entry-id="{{ $client->id }}">
-                            <td width="1">
+                            <td>
+                                @can('client_show')
+                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.clients.show', $client->id) }}">
+                                        <i class="fa-fw fas fa-eye"></i>
+                                    </a>
+                                @endcan
+
+                                @can('client_edit')
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.clients.edit', $client->id) }}">
+                                        <i class="fa-fw fas fa-edit"></i>
+                                    </a>
+                                @endcan
+
+                                @can('client_delete')
+                                    <form action="{{ route('admin.clients.destroy', $client->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <button class="btn btn-xs btn-danger" type="submit">
+                                            <i class="fa-fw fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endcan
 
                             </td>
                             <td width="10">
-                                {{ $client->id ?? '' }}
+                                {{ $key + 1 }}
                             </td>
                             <td>
                                 {{ $client->date ?? '' }}
                             </td>
                             <td class = "{{ str_replace(' ', '', $client->status) }}">
                                 {{ $client->status ?? '' }}
+                            </td>
+                            <td>
+                                {{ $client->samples ?? ''}}
+                            </td>
+                            <td>
+                                {{ $client->pricel ?? ''}}
+                            </td>
+                            <td>
+                                {{ $client->importance ?? '' }}
                             </td>
                             <td>
                                 {{ $client->contact ?? '' }}
@@ -116,28 +164,7 @@
                             <td>
                                 {{ $client->comments ?? '' }}
                             </td>
-                            <td>
-                                @can('client_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.clients.show', $client->id) }}">
-                                        {{ trans('global.view') }}
-                                    </a>
-                                @endcan
 
-                                @can('client_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.clients.edit', $client->id) }}">
-                                        {{ trans('global.edit') }}
-                                    </a>
-                                @endcan
-
-                                @can('client_delete')
-                                    <form action="{{ route('admin.clients.destroy', $client->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                    </form>
-                                @endcan
-
-                            </td>
 
                         </tr>
                     @endforeach
@@ -238,9 +265,12 @@ $(document).ready(function() {
     // Setup - add a text input to each footer cell
     $('#table_client thead tr').clone(true).appendTo( '#table_client thead' );
     $('#table_client thead tr:eq(1) th').each( function (i) {
+        
         if(i != 0 ) {
             var title = $(this)[0].innerText;
-            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+            pixel_arr = [0, 30, 60, 100, 40, 40, 40, 70, 70, 70, 90, 70, 70, 70, 70, 70, 80];
+            pixel = pixel_arr[i];
+            $(this).html( '<input style= "width:'+pixel+'px" type="text" placeholder="'+title+'" />' );
             $( 'input', this ).on( 'keyup change', function () {
                 if ( table.column(i).search() !== this.value ) {
                     table
@@ -255,8 +285,46 @@ $(document).ready(function() {
     var table = $('#table_client').DataTable( {
         orderCellsTop: true,
         fixedHeader: true,
-        "pageLength": 10
+        "lengthMenu": [[10, 25, 50, 250], [10, 25, 50, 250]],
+        "pageLength": 250,
+        selectableRows: false,
+        "createdRow": function (row, data) {
+            $(row).find("td:first").removeClass(' select-checkbox');
+        },
+        buttons: [
+            'copyHtml5',
+            'csvHtml5',
+            'excelHtml5',
+            'pdfHtml5',
+            'print',
+            'colvis',
+            {
+                text: 'Add Contact',
+                action: function ( e, dt, node, config ) {
+                    $("#form_submit").submit();
+                },
+                className: 'btn buttons-collection buttons-colvis btn_add_contact'
+            }
+        ]
+        // buttons: [
+        //     'colvis',
+        //     'copyHtml5',
+        //     'csvHtml5',
+        //     'excelHtml5',
+        //     'pdfHtml5',
+        //     'print',
+        //     {
+        //           name: 'Add',
+        //           extend: '',
+        //           text: '<a class="fa fa-file-excel-o btn btn-success"></a>',
+        //           titleAttr: 'Excel',
+        //           exportOptions: {
+        //               columns: [1, 2, 3, 4]
+        //           }
+        //     },
+        // ]
     } );
+    $('.dt-buttons').append('<h1>sss</h1>');
 } );
 //     // // Setup - add a text input to each footer cell
 //     // $('#table_client thead tr').clone(true).appendTo( '#table_client thead' );

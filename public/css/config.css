@@ -22,13 +22,49 @@
 }
 
 .Almostcustomer {
-    background-color: #d15b24;
+    background-color: #f3adad;
 }
 
 .Notinterested {
-    background-color: #4d573b;
+    background-color: #bfbfbf;
 }
 
 .Notinteresting {
-    background-color: #757953;
+    background-color: #c4bd97;
+}
+
+.RECALL {
+    background-color: #ffff00;
+}
+
+.Call1 {
+    background-color: #ffffd5;
+}
+
+.Call2 {
+    background-color: #ffffb7;
+}
+
+.Call3 {
+    background-color: #fef4ba;
+}
+
+.Undecided {
+    background-color: #ffd757;
+}
+
+.dt-buttons .btn {
+    margin-left: 0.333em;
+    border-radius: 0;
+    background-color: #f4f4f4;
+    color: #444;
+    border-color: #ddd;
+}
+
+.btn.buttons-collection.buttons-colvis.btn_add_contact {
+    margin-left: 0.333em;
+    border-radius: 0;
+    background-color: #34ff7c;
+    color: #444;
+    border-color: #ddd;
 }

@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'site_title' => 'Freelancer CRM',
+    'site_title' => 'Nodern Mosse CRM',
 ];

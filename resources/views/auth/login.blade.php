@@ -4,7 +4,7 @@
     <div class="login-logo">
         <div class="login-logo">
             <a href="#">
-                Nodern Mosse CRM
+                {{ trans('panel.site_title') }}
             </a>
         </div>
     </div>
@@ -20,7 +20,7 @@
                 {{ csrf_field() }}
 
                 <div class="form-group">
-                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" required autofocus placeholder="{{ trans('global.login_email') }}" name="email" value="{{ old('email', null) }}">
+                    <input type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" required autofocus placeholder="{{ trans('global.login_email') }}" name="email" value="{{ old('email', null) }}">
                     @if($errors->has('email'))
                         <div class="invalid-feedback">
                             {{ $errors->first('email') }}
