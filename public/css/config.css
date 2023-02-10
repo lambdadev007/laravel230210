@@ -1,0 +1,34 @@
+.Nocontact {}
+
+.Customer {
+    background-color: #92d050;
+}
+
+.Email1sent {
+    background-color: #5bcfc0;
+}
+
+.Email2sent {
+    background-color: #1b9e8d;
+}
+
+.Wa1sent {
+    background-color: #5ec25e;
+}
+
+.Wa2sent {
+    background-color: #588a54;
+    ;
+}
+
+.Almostcustomer {
+    background-color: #d15b24;
+}
+
+.Notinterested {
+    background-color: #4d573b;
+}
+
+.Notinteresting {
+    background-color: #757953;
+}
