@@ -499,5 +499,28 @@ $(document).ready(function() {
     .content-wrapper {
         min-height : 100%!important;
     }
+    #table_client_thead tr th:nth-of-type(2) {
+        width: 30px!important;
+        padding-left : 0!important;
+        padding-right : 0!important;
+        overflow : hidden;
+    }
+    #table_client_thead tr th:nth-of-type(13),
+    #table_client_thead tr th:nth-of-type(14),
+    #table_client_thead tr th:nth-of-type(15)  {
+        width: 50px!important;
+        padding-left : 0!important;
+        padding-right : 0!important;
+        overflow : hidden;
+    }
+    #table_client_thead tr th:nth-of-type(2):before, #table_client_thead tr th:nth-of-type(2):after ,    
+    #table_client_thead tr th:nth-of-type(13):before, #table_client_thead tr th:nth-of-type(13):after ,
+    #table_client_thead tr th:nth-of-type(14):before, #table_client_thead tr th:nth-of-type(14):after ,
+    #table_client_thead tr th:nth-of-type(14):before, #table_client_thead tr th:nth-of-type(15):after {
+        display : none!important;
+    }
+    tr {
+        font-size : 1.15rem;
+    }
 </style>    
 @endsection
