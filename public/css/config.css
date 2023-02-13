@@ -1,29 +1,29 @@
 .Nocontact {
-    background-color : #ccccb3;
+    background-color : #cac9c8;
 }
 .Call1 {
-    background-color: #ffff1a;
+    background-color: #ffed00;
 }
 
 .Call2 {
-    background-color: #ffd633;
+    background-color: #ffde0e;
 }
 
 .Call3 {
-    background-color: #cca300;
+    background-color: #eeca13;
 }
 .Almost {
-    background-color: #ff6600;
+    background-color: #ee7640;
 }
 .Customer {
-    background-color: #008000;
+    background-color: #99c771;
 }
 .Notinterested {
-    background-color: #4d3319;
+    background-color: #927256;
 }
 
 .Notinteresting {
-    background-color: #d3a678;
+    background-color: #998a76;
 }
 .Nocontact, .Call1, .Call2, .Call3, .Almost, .Customer, .Notinterested, .Notinteresting {
     color : white;

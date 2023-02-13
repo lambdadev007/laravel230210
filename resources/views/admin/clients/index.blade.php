@@ -28,7 +28,7 @@
         </div>
     @endcan -->
     <div class="card-body">
-        <div class="country-container">
+        <div class="country-container" style="max-width:300px">
             <span class="country"><i class="fas fa-globe-europe fa-2x mb-1"></i>Country</span>
             <select name="country" {{ !$isAdmin ? 'disabled':'' }}  id="country"  id="country"   class="form-control select1">
                 <option value="" {{ auth()->user()->country == '' ? 'selected' : ''}}></option>
@@ -55,7 +55,10 @@
                 <thead id="table_client_thead">
                     <tr>
                         <th>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        </th>
+                        <th >
+                            USER
                         </th>
                         <th >
                             ID
@@ -117,15 +120,10 @@
                                         <i class="fa-fw fas fa-eye"></i>
                                     </a>
                                 @endcan -->
-
-                                @can('client_edit')
-                                    <a class="btn btn-xs btn-success p-2" style="border-radius:50px;" href="{{ route('admin.clients.edit', $client->id) }}">
-                                        <i class="fas fa-pencil-alt fa-2x"></i>
-                                    </a>
-                                @endcan
-
+                                <input type="checkbox" name="selectedId" class="selectedId" value="{{ $client->id }}" />
+                               
                                 @can('client_delete')
-                                    <form action="{{ route('admin.clients.destroy', $client->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                    <form action="{{ route('admin.clients.destroy', $client->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: none;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button class="btn btn-xs btn-danger p-2"  style="border-radius:50px;" type="submit">
@@ -134,6 +132,9 @@
                                     </form>
                                 @endcan
 
+                            </td>
+                            <td width="10">
+                                {{ $client->assigned }}
                             </td>
                             <td width="10">
                                 {{ $key + 1 }}
@@ -317,7 +318,9 @@ $(document).ready(function() {
  
     var table = $('#table_client').DataTable( {
         orderCellsTop: true,
-        fixedHeader: true,
+        fixedHeader: {
+            footer: true
+        },
         "lengthMenu": [[10, 25, 50, 250], [10, 25, 50, 250]],
         pageLength: 250,
         lengthMenu: [0, 5, 10, 20, 50, 100, 250, 500],
@@ -353,6 +356,28 @@ $(document).ready(function() {
                 text : '<i class = "fas fa-file-excel fa-2x mb-1 text-success"></i>To Excel',
                 titleAttr : 'ToExcel'
             },
+            {
+                text: '<i class="fas fa-pencil-alt fa-1x bg-success p-2"></i>Edit',
+                action: function ( e, dt, node, config ) {
+                    let value = $('.selectedId:checked')[0]?.value;
+                    if(!value || value == 0) value = 0;
+                    if (value > 0) location.href = `/admin/clients/${value}/edit`;
+                },
+                className: 'btn buttons-collection buttons-colvis btn_edit_contact'
+            },
+            {
+                text: '<i class="fas fa-trash-alt fa-1x text-white bg-danger p-2"></i>Delete',
+                action: function ( e, dt, node, config ) {
+                    let value = $('.selectedId:checked')[0]?.value;
+                    if(!value || value == 0) value = 0;
+                    if(value > 0) {
+                        $('.selectedId:checked + form')[0].action = `/admin/clients/${value}`;
+                        console.log("asdf", $('.selectedId:checked:first-of-type + form button'))
+                        $('.selectedId:checked:first-of-type + form button').trigger('click');
+                    }
+                },
+                className: 'btn buttons-collection buttons-colvis btn_delete_contact'
+            }
             // 'print',
             // 'colvis',
         ]
@@ -415,11 +440,12 @@ $(document).ready(function() {
 // } );
 </script>
 <style>
-    .dt-buttons .btn.buttons-html5, .btn.buttons-collection.buttons-colvis.btn_add_contact {
+    .dt-buttons .btn.buttons-html5, .btn.buttons-collection.buttons-colvis.btn_add_contact, .btn.buttons-collection.buttons-colvis.btn_edit_contact, .btn.buttons-collection.buttons-colvis.btn_delete_contact  {
         background-color : transparent;
         border-color : transparent;
     }
-    .buttons-html5 span, .btn_add_contact span {
+    .btn_edit_contact i, .btn_delete_contact i { border-radius : 50px;}
+    .buttons-html5 span, .btn_add_contact span, .btn_edit_contact span,.btn_delete_contact span {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -447,7 +473,7 @@ $(document).ready(function() {
         display : flex;
         width: 250px;
         position: absolute;
-        left: 55%;
+        right: 320px;
         margin-top: 5px;
         z-index:1;
     }
@@ -462,6 +488,16 @@ $(document).ready(function() {
         font-size : 23px;
         padding : 10px;
         height : 45px;
+    }
+    .selectedId {
+        width:20px;
+        height : 20px;
+    }
+    .dataTables_scrollBody {
+        max-height: 600px!important;
+    }
+    .content-wrapper {
+        min-height : 100%!important;
     }
 </style>    
 @endsection
