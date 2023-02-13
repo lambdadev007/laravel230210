@@ -6,11 +6,20 @@
 
 <div class="card" style="zoom: 0.75;">
     <div class="card-header">
-        Contact List
+        <h2>Contact List<h2>
         <form method="get" action="{{ route("admin.clients.create") }}" id="form_submit">
         </form>
     </div>
-
+    <?php 
+        $user = auth()->user();
+        $country = $user->country;
+        $isAdmin = false;
+        foreach($user->roles as  $role) {
+            if($user->id == $role->pivot->user_id) {
+                if ($role->pivot->role_id == "1") $isAdmin = true;
+            }
+        }
+    ?>
 
     <!-- @can('client_create')
         <div style="float:right; margin-bottom: 10px;" class="row">
@@ -19,7 +28,17 @@
         </div>
     @endcan -->
     <div class="card-body">
-
+        <div class="country-container">
+            <span class="country"><i class="fas fa-globe-europe fa-2x mb-1"></i>Country</span>
+            <select name="country" {{ !$isAdmin ? 'disabled':'' }}  id="country"  id="country"   class="form-control select1">
+                <option value="" {{ auth()->user()->country == '' ? 'selected' : ''}}></option>
+                <option value="SPAIN" {{auth()->user()->country == 'SPAIN' ? 'selected' : ''}}>SPAIN</option>
+                <option value="PORTUGAL" {{auth()->user()->country == 'PORTUGAL' ? 'selected' : ''}}>PORTUGAL</option>
+                <option value="USA" {{auth()->user()->country == 'USA' ? 'selected' : ''}}>USA</option>
+                <option value="CANARIAS" {{auth()->user()->country == 'CANARIAS' ? 'selected' : ''}}>CANARIAS</option>
+                <option value="ALL" <?php echo $isAdmin ? 'selected' : '' ?>>ALL</option>
+            </select>            
+        </div>
         <div class="table-responsive">
 
             <div id="printbar" style="float:right"></div>
@@ -42,66 +61,66 @@
                             ID
                         </th>
                         <th>
-                            Date
+                            DATE
                         </th>
                         <th>
-                            Status
+                            STATUS
                         </th>
                         <th>
-                            Smp
+                            SCORE
                         </th>
                         <th>
-                            PL€
+                            COMPANY
                         </th>
                         <th>
-                            Pcs
+                            CONTACT
                         </th>
                         <th>
-                            Contact
+                            TEL.1
                         </th>
                         <th>
-                            Company
+                            TEL.2(Whatsapp)
                         </th>
                         <th>
-                            Town
+                            TOWN/CITY
                         </th>
                         <th>
-                            Area
+                            AREA/STATE
                         </th>
                         <th>
-                            Tel
+                            SAMPLES
                         </th>
                         <th>
-                            Mobile
+                            DISPLAY
                         </th>
                         <th>
-                            E-mail
+                            PRICES
                         </th>
                         <th>
-                            Web
+                            BRAND
                         </th>
                         <th>
-                            Brands
+                            COMMENTS
                         </th>
-                        <th>
-                            Comments
+                        <th style="display:none">
+                            COUNTRY
                         </th>
-
+                        <th style="display:none"></th>
                     </tr>
                 </thead>
                 <tbody style="text-align:center">
                     @foreach($clients as $key => $client)
                         <tr data-entry-id="{{ $client->id }}">
                             <td>
-                                @can('client_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.clients.show', $client->id) }}">
+                                <!-- @can('client_show')
+                                    <a class="btn btn-xs btn-primary p-2" style="border-radius:50px;" href="{{ route('admin.clients.show', $client->id) }}">
                                         <i class="fa-fw fas fa-eye"></i>
                                     </a>
-                                @endcan
+                                @endcan -->
 
                                 @can('client_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.clients.edit', $client->id) }}">
-                                        <i class="fa-fw fas fa-edit"></i>
+                                    <a class="btn btn-xs btn-success p-2" style="border-radius:50px;" href="{{ route('admin.clients.edit', $client->id) }}">
+                                        <i class="fas fa-pencil-alt fa-2x"></i>
                                     </a>
                                 @endcan
 
@@ -109,8 +128,8 @@
                                     <form action="{{ route('admin.clients.destroy', $client->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button class="btn btn-xs btn-danger" type="submit">
-                                            <i class="fa-fw fas fa-trash"></i>
+                                        <button class="btn btn-xs btn-danger p-2"  style="border-radius:50px;" type="submit">
+                                            <i class="fas fa-trash-alt fa-2x text-white"></i>
                                         </button>
                                     </form>
                                 @endcan
@@ -126,19 +145,19 @@
                                 {{ $client->status ?? '' }}
                             </td>
                             <td>
-                                {{ $client->samples ?? ''}}
+                                {{ $client->score ?? ''}}
                             </td>
                             <td>
-                                {{ $client->pricel ?? ''}}
-                            </td>
-                            <td>
-                                {{ $client->importance ?? '' }}
+                                {{ $client->company ?? ''}}
                             </td>
                             <td>
                                 {{ $client->contact ?? '' }}
                             </td>
                             <td>
-                                {{ $client->company ?? '' }}
+                                {{ $client->tel1 ?? '' }}
+                            </td>
+                            <td>
+                                {{ $client->tel2 ?? '' }}
                             </td>
                             <td>
                                 {{ $client->town ?? '' }}
@@ -147,25 +166,24 @@
                                 {{ $client->area ?? '' }}
                             </td>
                             <td>
-                                {{ $client->tel ?? '' }}
+                                {{ $client->samples ? '✔' : '' }}
                             </td>
                             <td>
-                                {{ $client->mobile ?? '' }}
+                                {{ $client->display ? '✔' : '' }}
                             </td>
                             <td>
-                                {{ $client->email ?? '' }}
+                                {{ $client->prices ? '✔' : '' }}
                             </td>
                             <td>
-                                {{ $client->web ?? '' }}
+                                {{ $client->brand ?? '' }}
                             </td>
-                            <td>
-                                {{ $client->brands ?? '' }}
-                            </td>
-                            <td>
+                            <td >
                                 {{ $client->comments ?? '' }}
                             </td>
-
-
+                            <td style="display:none">
+                                {{ $client->country ?? '' }}
+                            </td>
+                            <td style="display:none"></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -262,15 +280,30 @@
 // } );
 
 $(document).ready(function() {
+    let country = $('select#country').val();
+    if (country == "" || country =="ALL") country = "";
+    console.log("asdfasdf", country);
+    $('select#country').on('change', ()=>{ 
+        let country = $('select#country').val();
+        if (country == "" || country =="ALL") country = "";
+        // console.log("adsfasdf", $('#table_client_thead input.COUNTRY'), $('select#country').val());
+        $('#table_client_thead input.COUNTRY').val(country);
+        $('#table_client_thead  input.COUNTRY').trigger("change");
+    })
+    setTimeout(()=>{
+        $('#table_client_thead input.COUNTRY').val(country);
+        // console.log("ddd", $('select#country').val(), $('#table_client_thead input.COUNTRY'))
+        $('#table_client_thead input.COUNTRY').trigger("change");
+    }, 1500);
     // Setup - add a text input to each footer cell
     $('#table_client thead tr').clone(true).appendTo( '#table_client thead' );
     $('#table_client thead tr:eq(1) th').each( function (i) {
         
         if(i != 0 ) {
             var title = $(this)[0].innerText;
-            pixel_arr = [0, 30, 60, 100, 40, 40, 40, 70, 70, 70, 90, 70, 70, 70, 70, 70, 80];
+            pixel_arr = [0, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
             pixel = pixel_arr[i];
-            $(this).html( '<input style= "width:'+pixel+'px" type="text" placeholder="'+title+'" />' );
+            $(this).html( '<input style= "width:'+pixel+'%" type="text" class="'+ title + '" placeholder="'+title+'" />' );
             $( 'input', this ).on( 'keyup change', function () {
                 if ( table.column(i).search() !== this.value ) {
                     table
@@ -286,25 +319,42 @@ $(document).ready(function() {
         orderCellsTop: true,
         fixedHeader: true,
         "lengthMenu": [[10, 25, 50, 250], [10, 25, 50, 250]],
-        "pageLength": 250,
-        selectableRows: false,
+        pageLength: 250,
+        lengthMenu: [0, 5, 10, 20, 50, 100, 250, 500],
+        "selectableRows": false,
         "createdRow": function (row, data) {
             $(row).find("td:first").removeClass(' select-checkbox');
         },
         buttons: [
-            'copyHtml5',
-            'csvHtml5',
-            'excelHtml5',
-            'pdfHtml5',
-            'print',
-            'colvis',
             {
-                text: 'Add Contact',
+                text: '<i class="fas fa-user-plus fa-2x mb-1 text-success"></i>Add',
                 action: function ( e, dt, node, config ) {
                     $("#form_submit").submit();
                 },
                 className: 'btn buttons-collection buttons-colvis btn_add_contact'
-            }
+            },
+            {
+                extend : "copyHtml5",
+                text : '<i class = "fas fa-copy fa-2x mb-1 "></i>Copy',
+                titleAttr : 'Copy'
+            },
+            {
+                extend : "pdfHtml5",
+                text : '<i class = "fas fa-file-pdf fa-2x mb-1 text-danger"></i>To PDF',
+                titleAttr : 'ToPDF'
+            },
+            {
+                extend : "csvHtml5",
+                text : '<i class = "fas fa-file-csv fa-2x mb-1 "></i>To CSV',
+                titleAttr : 'ToCSV'
+            },
+            {
+                extend : "excelHtml5",
+                text : '<i class = "fas fa-file-excel fa-2x mb-1 text-success"></i>To Excel',
+                titleAttr : 'ToExcel'
+            },
+            // 'print',
+            // 'colvis',
         ]
         // buttons: [
         //     'colvis',
@@ -325,6 +375,7 @@ $(document).ready(function() {
         // ]
     } );
     $('.dt-buttons').append('<h1>sss</h1>');
+    /****************************************************** */
 } );
 //     // // Setup - add a text input to each footer cell
 //     // $('#table_client thead tr').clone(true).appendTo( '#table_client thead' );
@@ -363,5 +414,54 @@ $(document).ready(function() {
 //     // } );
 // } );
 </script>
-    
+<style>
+    .dt-buttons .btn.buttons-html5, .btn.buttons-collection.buttons-colvis.btn_add_contact {
+        background-color : transparent;
+        border-color : transparent;
+    }
+    .buttons-html5 span, .btn_add_contact span {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    select[name=table_client_length] {
+        font-size : 23px;
+        height : 50px!important;
+    }
+    #table_client_filter input[type=search] {
+        font-size: 20px;
+        padding: 10px;
+        line-height: 100%;
+        height: unset;
+        border-radius: 15px;
+        margin-top: 5px;
+        margin-right: 5px;
+    }
+    #table_client_filter label::before {
+        background-image : url('/images/search.svg') center;
+        width : 40px;
+        height:40px;
+    }
+    .country-container {
+        display : flex;
+        width: 250px;
+        position: absolute;
+        left: 55%;
+        margin-top: 5px;
+        z-index:1;
+    }
+    .country-container span {
+        display: flex;
+        flex-direction: column;
+        align-items : center;
+        margin-right : 10px;
+    }
+    .country-container #country {
+        width : 170px;
+        font-size : 23px;
+        padding : 10px;
+        height : 45px;
+    }
+</style>    
 @endsection

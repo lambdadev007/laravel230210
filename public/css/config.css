@@ -1,7 +1,32 @@
-.Nocontact {}
+.Nocontact {
+    background-color : #ccccb3;
+}
+.Call1 {
+    background-color: #ffff1a;
+}
 
+.Call2 {
+    background-color: #ffd633;
+}
+
+.Call3 {
+    background-color: #cca300;
+}
+.Almost {
+    background-color: #ff6600;
+}
 .Customer {
-    background-color: #92d050;
+    background-color: #008000;
+}
+.Notinterested {
+    background-color: #4d3319;
+}
+
+.Notinteresting {
+    background-color: #d3a678;
+}
+.Nocontact, .Call1, .Call2, .Call3, .Almost, .Customer, .Notinterested, .Notinteresting {
+    color : white;
 }
 
 .Email1sent {
@@ -19,34 +44,6 @@
 .Wa2sent {
     background-color: #588a54;
     ;
-}
-
-.Almostcustomer {
-    background-color: #f3adad;
-}
-
-.Notinterested {
-    background-color: #bfbfbf;
-}
-
-.Notinteresting {
-    background-color: #c4bd97;
-}
-
-.RECALL {
-    background-color: #ffff00;
-}
-
-.Call1 {
-    background-color: #ffffd5;
-}
-
-.Call2 {
-    background-color: #ffffb7;
-}
-
-.Call3 {
-    background-color: #fef4ba;
 }
 
 .Undecided {

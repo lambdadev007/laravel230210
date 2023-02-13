@@ -18,24 +18,28 @@ class Client extends Model
     ];
 
     protected $fillable = [
+        'country',
         'date',
         'status',
-        'samples',
-        'pricel',
-        'importance',
-        'contact',
+        'score',
         'company',
+        'contact',
+        'tel1',
+        'tel2',
         'town',
         'area',
-        'tel',
-        'mobile',
-        'email',
-        'web',
-        'brands',
+        'samples',
+        'display',
+        'prices',
+        'brand',
         'comments',
+        'email',
+        'rank',
+        'assigned',
         'created_at',
         'updated_at',
         'deleted_at',
+        'status_id'
     ];
 
     public function projects()

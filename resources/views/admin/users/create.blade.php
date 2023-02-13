@@ -45,6 +45,25 @@
                     {{ trans('cruds.user.fields.password_helper') }}
                 </p>
             </div>
+            <div class="form-group {{ $errors->has('country') ? 'has-error' : '' }}">
+                <label for="country">{{ trans('cruds.user.fields.country') }}</label>
+                <select name="country" id="country" class="form-control select1">
+                    <option value=""></option>
+                    <option value="SPAIN" >SPAIN</option>
+                    <option value="PORTUGAL" >PORTUGAL</option>
+                    <option value="USA" >USA</option>
+                    <option value="CANARIAS" >CANARIAS</option>
+                    <option value="ALL" >ALL</option>
+                </select>
+                @if($errors->has('country'))
+                    <p class="help-block">
+                        {{ $errors->first('country') }}
+                    </p>
+                @endif
+                <p class="helper-block">
+                    {{ trans('cruds.user.fields.country_helper') }}
+                </p>
+            </div>
             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
                 <label for="roles">{{ trans('cruds.user.fields.roles') }}*
                     <span class="btn btn-info btn-xs select-all">{{ trans('global.select_all') }}</span>

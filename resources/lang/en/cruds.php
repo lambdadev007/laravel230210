@@ -48,6 +48,7 @@ return [
             'name'                     => 'Name',
             'name_helper'              => '',
             'email'                    => 'Email',
+            'country'                    => 'Country',
             'email_helper'             => '',
             'email_verified_at'        => 'Email verified at',
             'email_verified_at_helper' => '',

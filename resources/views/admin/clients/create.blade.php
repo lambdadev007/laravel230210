@@ -1,279 +1,354 @@
 @extends('layouts.admin')
 @section('content')
 
+<?php 
+    $user = auth()->user();
+    $country = $user->country;
+    $isAdmin = false;
+    foreach($user->roles as  $role) {
+        if($user->id == $role->pivot->user_id) {
+            if ($role->pivot->role_id == "1") $isAdmin = true;
+        }
+    }
+?>
 <div class="card">
-    <div class="card-header">
-        Create Contact
+    <div class="card-header fa-2x mx-5 pl-5">
+    <i class="fas fa-user-plus  text-success"></i>&nbsp; New Contact
     </div>
 
-    <div class="card-body">
+    <div class="card-body mx-5 px-5">
         <form action="{{ route("admin.clients.store") }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="row">
-                <div class="col-md-6 form-group {{ $errors->has('date') ? 'has-error' : '' }}">
-                    <label for="date">Date</label>
-                    <input type="text" id="date" name="date" class="form-control date" value="{{ old('date', isset($client) ? $client->date : '') }}" >
-                    @if($errors->has('date'))
-                        <p class="help-block">
-                            {{ $errors->first('date') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                    </p>
-
+            <div class="row justify-content-between">
+                <div class="col-md-5 form-group {{ $errors->has('country') ? 'has-error' : '' }}">
+                    <div class="row">                     
+                        <label class="col-sm-4" for="country">COUNTRY</label>
+                        <div class="col-sm-8">
+                            @if (!$isAdmin)  
+                                <input type="hidden" name = "country" value="{{ $country }}">
+                            @endif
+                            <select name="country" id="country" {{ !$isAdmin ? 'disabled':'' }} class="form-control select1">
+                                <option value="" ></option>
+                                <option value="SPAIN" {{$country == 'SPAIN' ? 'selected':'' }} >SPAIN</option>
+                                <option value="PORTUGAL" {{$country == 'PORTUGAL' ? 'selected':'' }}>PORTUGAL</option>
+                                <option value="USA" {{$country == 'USA' ? 'selected':'' }}>USA</option>
+                                <option value="CANARIAS" {{$country == 'CANARIAS' ? 'selected':'' }}>CANARIAS</option>
+                            </select>
+                            @if($errors->has('country'))
+                                <p class="help-block">
+                                    {{ $errors->first('country') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6 form-group {{ $errors->has('status') ? 'has-error' : '' }}">
-                    <label for="status">Status</label>
-                    <select name="status" id="status" class="form-control select1" >
-                        <option value=""></option>
-                        <option value="No contact">No Contact</option>
-                        <option value="RECALL">RECALL</option>
-                        <option value="Call 1">Call 1</option>
-                        <option value="Call 2">Call 2</option>
-                        <option value="Call 3">Call 3</option>
-                        <option value="Undecided">Undecided</option>
-                        <option value="Almost customer">Almost Customer</option>
-                        <option value="Customer">Customer</option>
-                        <option value="Not interested">Not interested</option>
-                        <option value="Not interesting">Not interesting</option>
-                    </select>
-                    @if($errors->has('status'))
-                        <p class="help-block">
-                            {{ $errors->first('status') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group {{ $errors->has('samples') ? 'has-error' : '' }}">
-                    <label for="samples">Samples</label>
-                    <select name="samples" id="samples" class="form-control select1" >
-                        <option value=""></option>
-                        <option value="YES">YES</option>
-                        <option value="NO">NO</option>
-                    </select>
-                    @if($errors->has('samples'))
-                        <p class="help-block">
-                            {{ $errors->first('samples') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
-                </div>
-                <div class="col-md-6 form-group {{ $errors->has('pricel') ? 'has-error' : '' }}">
-                    <label for="pricel">PriceL</label>
-                    <select name="pricel" id="pricel" class="form-control select1" >
-                        <option value=""></option>
-                        <option value="YES">YES</option>
-                        <option value="NO">NO</option>
-                    </select>
-                    @if($errors->has('pricel'))
-                        <p class="help-block">
-                            {{ $errors->first('pricel') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
+                <div class="col-md-5 form-group {{ $errors->has('assigned') ? 'has-error' : '' }}">
+                    <div class="row">                      
+                        <label class="col-sm-4" for="assigned">Assigned</label>
+                        <div class="col-sm-8">
+                            <select name="assigned" id="assigned" class="form-control select1 ">
+                                @foreach($users as $user)
+                                    @if ($user->country == $country && !$isAdmin)
+                                        <option country="{{$user->country}}" value="{{ $user->id }}">{{ $user->email }}</option>
+                                    @endif
+                                    @if ($isAdmin)                                    
+                                        <option  country="{{$user->country}}" value="{{ $user->id }}">{{ $user->email }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @if($errors->has('assigned'))
+                                <p class="help-block">
+                                    {{ $errors->first('assigned') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 form-group {{ $errors->has('importance') ? 'has-error' : '' }}">
-                    <label for="importance">Units/day</label>
-                    <select name="importance" id="importance" class="form-control select1" >
-                        <option value=""></option>
-                        @for($i = 1; $i <= 50 ; $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-                    @if($errors->has('importance'))
-                        <p class="help-block">
-                            {{ $errors->first('importance') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
+            <div class="row justify-content-between">
+                <div class="col-md-5 form-group {{ $errors->has('id') ? 'has-error' : '' }}">
+                    <div class="row">                       
+                        <label class="col-sm-4" for="id">ID.</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="id" disabled name="id" class="form-control id "  >
+                            @if($errors->has('id'))
+                                <p class="help-block">
+                                    {{ $errors->first('id') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6 form-group {{ $errors->has('contact') ? 'has-error' : '' }}">
-                    <label for="contact">Contact</label>
-                    <input type="text" id="contact" name="contact" class="form-control" value="{{ old('contact', isset($client) ? $client->contact : '') }}" required>
-                    @if($errors->has('contact'))
-                        <p class="help-block">
-                            {{ $errors->first('contact') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group {{ $errors->has('company') ? 'has-error' : '' }}">
-                    <label for="company">Company</label>
-                    <input type="company" id="company" name="company" class="form-control" value="{{ old('company', isset($client) ? $client->company : '') }}">
-                    @if($errors->has('company'))
-                        <p class="help-block">
-                            {{ $errors->first('company') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
-                </div>
-
-                <div class="col-md-6 form-group {{ $errors->has('town') ? 'has-error' : '' }}">
-                    <label for="town">Town</label>
-                    <input type="text" id="town" name="town" class="form-control" value="{{ old('town', isset($client) ? $client->town : '') }}">
-                    @if($errors->has('town'))
-                        <p class="help-block">
-                            {{ $errors->first('town') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
+                <div class="col-md-5 form-group {{ $errors->has('date') ? 'has-error' : '' }}">
+                    <div class="row">  
+                        <label for="date" class="col-sm-4">Date</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="date" name="date" class="form-control date"  >
+                            @if($errors->has('date'))
+                                <p class="help-block">
+                                    {{ $errors->first('date') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 form-group {{ $errors->has('area') ? 'has-error' : '' }}">
-                    <label for="area">Area</label>
-                    <select name="area" id="area" class="form-control select" >
-                        <option value=""></option>
-                        <option value="Andalucia">Andalucia</option>
-                        <option value="Aragon">Aragon</option>
-                        <option value="Asturias">Asturias</option>
-                        <option value="Baleares">Baleares</option>
-                        <option value="Canarias">Canarias</option>
-                        <option value="Cantabria">Cantabria</option>
-                        <option value="Cataluna">Cataluna</option>
-                        <option value="Castilla Leon">Castilla Leon</option>
-                        <option value="Castilla Mancha">Castilla Mancha</option>
-                        <option value="Ceuuta/Melilla">Ceuuta/Melilla</option>
-                        <option value="Extremadura">Extremadura</option>
-                        <option value="Galicia">Galicia</option>
-                        <option value="La Rioja">La Rioja</option>
-                        <option value="Madrid">Madrid</option>
-                        <option value="Murcia">Murcia</option>
-                        <option value="Navarra">Navarra</option>
-                        <option value="Pais Vasco">Pais Vasco</option>
-                        <option value="Valencia">Valencia</option>
-                    </select>
-                    @if($errors->has('area'))
-                        <p class="help-block">
-                            {{ $errors->first('area') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
+            <div class="row justify-content-between">
+                <div class="col-md-5 form-group {{ $errors->has('company') ? 'has-error' : '' }}">
+                    <div class="row">                       
+                        <label class="col-sm-4" for="company">Company</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="company" name="company" class="form-control company" >
+                            @if($errors->has('company'))
+                                <p class="help-block">
+                                    {{ $errors->first('company') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col-md-6 form-group {{ $errors->has('tel') ? 'has-error' : '' }}">
-                    <label for="tel">Tel</label>
-                    <input type="tel" id="tel" name="tel" class="form-control" pattern="[0-9]{3} [0-9]{3} [0-9]{3}" >
-                    <small>Format: 123 456 789</small>
-                    @if($errors->has('tel'))
-                        <p class="help-block">
-                            {{ $errors->first('tel') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-
-                    </p>
+                <div class="col-md-5 form-group {{ $errors->has('tel1') ? 'has-error' : '' }}">
+                    <div class="row">                      
+                        <label class="col-sm-4" for="tel1">Tel.1</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="tel1" 
+                                name="tel1" class="form-control tel1 " 
+                                placeholder = "format : '123 456 789'"
+                                pattern="^(\+1)?(\x20)?([0-9]{3})\x20([0-9]{3})\x20([0-9]{3})$"
+                                title = "Inputing format : '123 456 789'">
+                            @if($errors->has('tel1'))
+                                <p class="help-block">
+                                    {{ $errors->first('tel1') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                          
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
-                    <label for="mobile">Mobile</label>
-                    <input type="tel" id="mobile" name="mobile" class="form-control" pattern="[0-9]{3} [0-9]{3} [0-9]{3}" >
-                    <small>Format: 123 456 789</small>
-                    @if($errors->has('mobile'))
-                        <p class="help-block">
-                            {{ $errors->first('mobile') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
+            <div class="row justify-content-between">
+                <div class="col-md-5 form-group {{ $errors->has('contact') ? 'has-error' : '' }}">
+                    <div class="row">                     
+                        <label class="col-sm-4" for="contact">Contact</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="contact" name="contact" class="form-control contact " >
+                            @if($errors->has('contact'))
+                                <p class="help-block">
+                                    {{ $errors->first('contact') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col-md-6 form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" value="{{ old('email', isset($client) ? $client->email : '') }}" >
-                    @if($errors->has('email'))
-                        <p class="help-block">
-                            {{ $errors->first('email') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 form-group {{ $errors->has('web') ? 'has-error' : '' }}">
-                    <label for="web">Web</label>
-                    <input type="text" id="web" name="web" class="form-control" value="{{ old('web', isset($client) ? $client->web : '') }}">
-                    @if($errors->has('web'))
-                        <p class="help-block">
-                            {{ $errors->first('web') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
-                </div>
-
-                <div class="col-md-6 form-group {{ $errors->has('brands') ? 'has-error' : '' }}">
-                    <label for="brands">Brands</label>
-                    <select name="brands" id="brands" class="form-control select" >
-                        <option value=""></option>
-                        <option value="Mesoestetic">Mesoestetic</option>
-                        <option value="Thalgo">Thalgo</option>
-                        <option value="Natura Bisse">Natura Bisse</option>
-                        <option value="Skeyndor">Skeyndor</option>
-                        <option value="Casmara">Casmara</option>
-                        <option value="Eberlin">Eberlin</option>
-                        <option value="Medik8">Medik8</option>
-                        <option value="Massada">Massada</option>
-                        <option value="Germaine">Germaine</option>
-                        <option value="Biologique">Biologique</option>
-                        <option value="Other">Other...</option>
-                    </select>
-                    @if($errors->has('brands'))
-                        <p class="help-block">
-                            {{ $errors->first('brands') }}
-                        </p>
-                    @endif
-                    <p class="helper-block">
-                        
-                    </p>
+                <div class="col-md-5 form-group {{ $errors->has('tel2') ? 'has-error' : '' }}">
+                    <div class="row">                      
+                        <label class="col-sm-4" for="tel2">Tel.2</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="tel2" 
+                                name="tel2" 
+                                class="form-control tel2" 
+                                placeholder = "format : '123 456 789'"
+                                pattern="^(\+1)?(\x20)?([0-9]{3})\x20([0-9]{3})\x20([0-9]{3})$"
+                                title = "Inputing format : '123 456 789'">
+                            @if($errors->has('tel2'))
+                                <p class="help-block">
+                                    {{ $errors->first('tel2') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                      
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 form-group {{ $errors->has('comments') ? 'has-error' : '' }}">
+            <div class="row justify-content-between">
+                <div class="col-md-5 form-group {{ $errors->has('town') ? 'has-error' : '' }}">
+                    <div class="row">                    
+                        <label class="col-sm-4" for="town">Town</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="town" name="town" class="form-control town" >
+                            @if($errors->has('town'))
+                                <p class="help-block">
+                                    {{ $errors->first('town') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 form-group {{ $errors->has('email') ? 'has-error' : '' }}">
+                    <div class="row">                     
+                        <label class="col-sm-4" for="email">e-mail</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="email" name="email" class="form-control email " >
+                            @if($errors->has('email'))
+                                <p class="help-block">
+                                    {{ $errors->first('email') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-between">
+                <div class="col-md-5 form-group {{ $errors->has('area') ? 'has-error' : '' }}">
+                    <div class="row">                   
+                        <label class="col-sm-4" for="area">Area/State</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="area" name="area" class="form-control area "  >
+                            @if($errors->has('area'))
+                                <p class="help-block">
+                                    {{ $errors->first('area') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 form-group {{ $errors->has('brand') ? 'has-error' : '' }}">
+                    <div class="row">                    
+                        <label class="col-sm-4" for="brand">Brand</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="brand" name="brand" class="form-control brand "  >
+                            @if($errors->has('brand'))
+                                <p class="help-block">
+                                    {{ $errors->first('brand') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                    <div class="row">                       
+                        <label class="col-sm-4" for="status">STATUS</label>
+                        <div class="col-sm-8">
+                            <select name="status" id="status" class="form-control select1 ">
+                                <option value="" ></option>
+                                <option value="No contact" >No Contact</option>
+                                <option value="Call 1" >Call 1</option>
+                                <option value="Call 2" >Call 2</option>
+                                <option value="Call 3" >Call 3</option>
+                                <option value="Almost" >Almost</option>
+                                <option value="Customer" >Customer</option>
+                                <option value="Not interested" >Not interested</option>
+                                <option value="Not interesting" >Not interesting</option>
+                            </select>
+                            @if($errors->has('country'))
+                                <p class="help-block">
+                                    {{ $errors->first('country') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 form-group {{ $errors->has('rank') ? 'has-error' : '' }}">
+                    <div class="row">                       
+                        <label class="col-sm-4" for="score">Rank</label>
+                        <div class="col-sm-8">
+                            <select name="score" id="score" class="form-control select1 ">
+                                <option value=""></option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="P">P</option>
+                                <option value="L">L</option>
+                            </select>
+                            @if($errors->has('score'))
+                                <p class="help-block">
+                                    {{ $errors->first('score') }}
+                                </p>
+                            @endif
+                            <p class="helper-block">                        
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-4">
+                <div class="col-sm-4 form-group">
+                    <label for="samples">/Samples &nbsp; &nbsp;</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="samples" value="1" >Yes &nbsp;
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="samples" value="0" checked>No &nbsp;
+                    </label>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label for="prices">/Price &nbsp; &nbsp;</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="prices" value="1" >Yes &nbsp;
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="prices" value="0" checked>No &nbsp;
+                    </label>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label for="display">/Display &nbsp; &nbsp;</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="display" value="1"  >Yes &nbsp;
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="display" value="0" checked>No &nbsp;
+                    </label>
+                </div>
+            </div>
+            <div class="row pt-4">
+                <div class="col-md-12 form-group {{ $errors->has('comments') ? 'has-error' : '' }} ">
                     <label for="comments">Comments</label>
-                    <input type="text" id="comments" name="comments" class="form-control" value="{{ old('comments', isset($client) ? $client->comments : '') }}">
+                    <textarea id="comments" name="comments" rows="3" class="form-control" ></textarea>
                     @if($errors->has('comments'))
                         <p class="help-block">
                             {{ $errors->first('comments') }}
                         </p>
                     @endif
-                    <p class="helper-block">
-                        
+                    <p class="helper-block">                        
                     </p>
                 </div>
             </div>
-            
-            <div>
-                <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">
+            <div class="row">
+                <div class="col-sm-12 ">
+                    <input class="btn btn-success float-right" type="submit" value="{{ trans('global.save') }}">
+                </div>
             </div>
         </form>
     </div>
 </div>
+<script>
+    document.getElementById("country").addEventListener('change', (e)=>{
+        let country = e.target.value;
+        elems = document.querySelectorAll("#assigned option");
+        document.getElementById("assigned").value = "";
+        for (let i = 0; i < elems.length; i++){
+            let elem = elems[i];
+            let coun = elem.getAttribute("country");
+            if(coun === country) {
+                elem.style.display ="unset";                
+            } else {
+                elem.style.display = "none";  
+            }
+        }
+
+    });
+</script>
 @endsection
