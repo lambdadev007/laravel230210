@@ -494,7 +494,7 @@ $(document).ready(function() {
         height : 20px;
     }
     .dataTables_scrollBody {
-        max-height: 600px!important;
+        max-height: calc(100vh - 250px)!important;
     }
     .content-wrapper {
         min-height : 100%!important;
