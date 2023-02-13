@@ -6,7 +6,6 @@
 
 <div class="card" style="zoom: 0.75;">
     <div class="card-header">
-        <h2>Contact List<h2>
         <form method="get" action="{{ route("admin.clients.create") }}" id="form_submit">
         </form>
     </div>
@@ -473,7 +472,7 @@ $(document).ready(function() {
         display : flex;
         width: 250px;
         position: absolute;
-        right: 320px;
+        right: 400px;
         margin-top: 5px;
         z-index:1;
     }
@@ -494,7 +493,7 @@ $(document).ready(function() {
         height : 20px;
     }
     .dataTables_scrollBody {
-        max-height: calc(100vh - 250px)!important;
+        max-height: calc(100vh - 200px)!important;
     }
     .content-wrapper {
         min-height : 100%!important;
@@ -521,6 +520,9 @@ $(document).ready(function() {
     }
     tr {
         font-size : 1.15rem;
+    }
+    .content {
+        padding-top : 10px!important;
     }
 </style>    
 @endsection
