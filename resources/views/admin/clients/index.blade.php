@@ -155,9 +155,19 @@
                             </td>
                             <td>
                                 {{ $client->tel1 ?? '' }}
+                                @if (!empty($client->tel1))
+                                    <a href = "tel:{{ $client->tel1 }}">
+                                        <i class="fas fa-phone bg-success text-white fa-1x p-2" style="border-radius:30px;"></i>
+                                    </a>
+                                @endif
                             </td>
                             <td>
                                 {{ $client->tel2 ?? '' }}
+                                @if (!empty($client->tel2))
+                                    <a href = "tel:{{ $client->tel2 }}">
+                                        <i class="fas fa-phone bg-success text-white fa-1x p-2" style="border-radius:30px;"></i>
+                                    </a>
+                                @endif
                             </td>
                             <td>
                                 {{ $client->town ?? '' }}
