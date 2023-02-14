@@ -472,7 +472,7 @@ $(document).ready(function() {
         display : flex;
         width: 250px;
         position: absolute;
-        right: 400px;
+        right: 380px;
         margin-top: 5px;
         z-index:1;
     }
@@ -493,7 +493,7 @@ $(document).ready(function() {
         height : 20px;
     }
     .dataTables_scrollBody {
-        max-height: calc(100vh - 200px)!important;
+        max-height: calc(100vh - 80px)!important;
     }
     .content-wrapper {
         min-height : 100%!important;
@@ -522,7 +522,17 @@ $(document).ready(function() {
         font-size : 1.15rem;
     }
     .content {
-        padding-top : 10px!important;
+        padding-top : 5px!important;
+    }
+    nav.main-header, .navbar-nav .nav-link {
+        padding-top: 0px!important;
+        padding-bottom: 0px!important;
+    }
+    .navbar-nav .nav-link {
+        height : 25px!important;
+    }
+    .card-header { 
+        display : none!important;
     }
 </style>    
 @endsection
